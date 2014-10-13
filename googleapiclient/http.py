@@ -418,8 +418,14 @@ class MediaFileUpload(MediaIoBaseUpload):
       resumable: bool, True if this is a resumable upload. False means upload
         in a single request.
     """
+
+    if isinstance(filename,file):
+        fd = filename
+        filename = fd.name
+    else:
+        fd = open(self._filename, 'rb')
+
     self._filename = filename
-    fd = open(self._filename, 'rb')
     if mimetype is None:
       (mimetype, encoding) = mimetypes.guess_type(filename)
     super(MediaFileUpload, self).__init__(fd, mimetype, chunksize=chunksize,
